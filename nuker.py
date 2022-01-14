@@ -1,6 +1,7 @@
 from discord import Intents
 from discord.ext import commands
 from requests import put
+import discord
 from asyncio import create_task
 
 prefix = '!' # наш префикс
