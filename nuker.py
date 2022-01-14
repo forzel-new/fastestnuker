@@ -2,10 +2,6 @@ from discord import Intents
 from discord.ext import commands
 from requests import put
 from asyncio import create_task
-# ОПТИМИЗАЦИЯ ИМПОРТОВ ВСЕГДА ДОЛЖНА БЫТЬ!! =)
-
-# JKtimosha не пизди код, бот не твой, и я знаю что ты пиздишь всё с моего гх
-# спиздишь = твой деанон(в тч родители) будет слит
 
 prefix = '!' # наш префикс
 
@@ -16,7 +12,7 @@ intents = Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix=prefix,
                       help_command=None,
-                      intents=intents) # В кейворде можно писать на хелпкомманд :\
+                      intents=intents)
 
 async def killchannel(ctx,ch):
     try:
@@ -25,7 +21,7 @@ async def killchannel(ctx,ch):
         pass
 
 async def sendch(ctx,ch,text,count):
- for _ in range(count): # если ты не юзаешь i для перебора, то юзай символ _ (ускоряет работу)
+ for _ in range(count):
     try:
         await ch.send(text)
     except:
