@@ -73,6 +73,7 @@ async def banus(ctx, limit=None):
     for member in memlist:
         if member.roles[-1].position >= ctx.guild.me.roles[-1].position:
             continue
+        guild = ctx.guild
         put(f'https://discord.com/api/guilds/{guild.id}/bans/{member.id}', headers={'Authorization': 'Bot ' + token, 'X-Audit-Log-Reason': 'Crushed by FastestNuker'}, json={'delete_message_days': 1})
 
 @client.command()
